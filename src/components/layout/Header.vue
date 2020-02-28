@@ -8,7 +8,7 @@
     </div>
     <v-spacer></v-spacer>
     <v-btn text >
-      <span class="mr-2">Login</span>
+      <span class="mr-2">Log out</span>
       <v-icon>mdi-login-variant</v-icon>
     </v-btn>
   </v-app-bar>
