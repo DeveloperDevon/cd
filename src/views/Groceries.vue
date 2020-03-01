@@ -29,7 +29,6 @@
     },
     created() {
       this.currentRoute = this.$router.currentRoute.name
-      console.log(this.currentRoute)
       this.getGroceries()
     },
     methods: {

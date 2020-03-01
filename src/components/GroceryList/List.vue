@@ -7,7 +7,7 @@
           <v-spacer></v-spacer>
           <h3 v-if="groceries" style="color: #1976d2" class="pr-4">{{groceries.filter(a => a.checked === true).length}}/{{groceries.length}}</h3>
         </v-row>
-        <v-simple-table>
+        <v-simple-table v-if="this.currentRoute === 'groceries'">
           <thead>
             <tr>
               <th class="text-left">Qty</th>
@@ -17,7 +17,7 @@
           </thead>
           <tbody>
             <tr v-for="grocery in groceries" :key="grocery.id">
-              <td>1</td>
+              <td>{{ grocery.qty }}</td>
               <td @click="toggleChecked(grocery.id, grocery.checked)" v-bind:class="{ checked: grocery.checked }">{{ grocery.name }}</td>
               <td @click="deleteItem(grocery.id)" class="text-right">x</td>
             </tr>
@@ -33,6 +33,12 @@
 export default {
   name: 'List',
   props: ['groceries'],
+  data: () => ({
+    currentRoute: ''
+  }),
+  created() {
+    this.currentRoute = this.$router.currentRoute.name
+  },
   methods: {
     toggleChecked(id, checked) {
       this.$emit('toggleChecked', {id, checked})

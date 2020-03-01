@@ -8,7 +8,6 @@ export const getCategoriesMixin = {
       getCategories: () => {
         db.collection('categories').get().then(data => {
           data.docs.map(doc => {
-            console.log(doc.data().name)
             this.categories.push({id: doc.id, name: doc.data().name})
           })
         })

@@ -8,7 +8,7 @@
         </v-btn>
       </template>
 
-      <AddGroceryForm v-on:addItem="addItem" />
+      <AddGroceryForm v-on:addItem="addItem" :clearFields="clearFields" />
       
     </v-dialog>
   </v-container>
@@ -24,6 +24,7 @@
     data() {
       return {
         dialog: false,
+        clearFields: false
       }
     },
     methods: {
@@ -31,7 +32,7 @@
         const { item, dialog} = e
         this.dialog = dialog
         this.$emit('addItem', item)
-      }
+      },
     }
   }
 </script>

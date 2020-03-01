@@ -1,5 +1,6 @@
 import * as firebase from 'firebase/app'
 import 'firebase/firestore'
+import 'firebase/auth'
 
 // const config = {
 //   apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
@@ -32,3 +33,4 @@ const config = {
 
 export const fb = firebase.initializeApp(config)
 export const db = firebase.firestore()
+export const auth = firebase.auth()
