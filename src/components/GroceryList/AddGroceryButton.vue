@@ -8,7 +8,7 @@
         </v-btn>
       </template>
 
-      <AddGroceryForm v-on:addItem="addItem" :clearFields="clearFields" />
+      <AddGroceryForm v-on:addItem="addItem" />
       
     </v-dialog>
   </v-container>
@@ -40,5 +40,8 @@
 <style>
   .item-input {
     flex: 1;
+  }
+  .container {
+    padding: 0px !important
   }
 </style>

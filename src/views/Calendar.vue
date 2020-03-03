@@ -22,24 +22,6 @@
         class="ma-2"
         label="type"
       ></v-select>
-      <v-select
-        v-model="mode"
-        :items="modes"
-        dense
-        outlined
-        hide-details
-        label="event-overlap-mode"
-        class="ma-2"
-      ></v-select>
-      <v-select
-        v-model="weekday"
-        :items="weekdays"
-        dense
-        outlined
-        hide-details
-        label="weekdays"
-        class="ma-2"
-      ></v-select>
       <v-spacer></v-spacer>
       <v-btn
         icon
@@ -56,7 +38,6 @@
         :weekdays="weekday"
         :type="type"
         :events="events"
-        :event-overlap-mode="mode"
         :event-overlap-threshold="30"
         :event-color="getEventColor"
         @change="getEvents"
@@ -70,8 +51,6 @@
     data: () => ({
       type: 'month',
       types: ['month', 'week', 'day', '4day'],
-      mode: 'stack',
-      modes: ['stack', 'column'],
       weekday: [0, 1, 2, 3, 4, 5, 6],
       weekdays: [
         { text: 'Sun - Sat', value: [0, 1, 2, 3, 4, 5, 6] },
