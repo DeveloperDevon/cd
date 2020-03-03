@@ -7,7 +7,7 @@
           <v-spacer></v-spacer>
           <h3 v-if="groceries" style="color: #1976d2" class="pr-4">{{groceries.filter(a => a.checked === true).length}}/{{groceries.length}}</h3>
         </v-row>
-        <v-simple-table v-if="this.currentRoute === 'groceries'" fixed-header height="432">
+        <v-simple-table v-if="this.currentRoute === 'groceries'" fixed-header height="480">
           <thead>
             <tr>
               <th class="text-left">Qty</th>
