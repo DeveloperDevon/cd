@@ -3,18 +3,20 @@
     <v-row>
       <v-col>
         <v-row class="px-3">
-          <router-link style="text-decoration: none" to="/groceries"><h3 class="pl-4">Grocery List</h3></router-link>
+          <router-link style="text-decoration: none" to="/groceries">
+            <h3 class="pl-4">Grocery List</h3>
+          </router-link>
           <v-spacer></v-spacer>
           <h3 v-if="groceries" style="color: #1976d2" class="pr-4">
             {{groceries.filter(a => a.checked === true).length}}/{{groceries.length}}
-            </h3>
+          </h3>
         </v-row>
         <v-simple-table v-if="this.currentRoute === 'groceries'" fixed-header height="480">
           <thead>
             <tr>
               <th class="text-left">Qty</th>
               <th class="text-left">Item</th>
-              <th class="text-right"></th>
+              <th class="text-center"><ListMenu /></th>
             </tr>
           </thead>
           <tbody>
@@ -36,26 +38,29 @@
         </v-simple-table>
       </v-col>
     </v-row>
+    <AddGroceryButton v-if="this.currentRoute === 'groceries'" />
   </v-container>
 </template>
 
 <script>
 import EditGroceryButton from './EditGroceryButton'
+import AddGroceryButton from '@/components/GroceryList/AddGroceryButton'
+import ListMenu from '@/components/GroceryList/ListMenu'
+
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'List',
-  components: { EditGroceryButton },
+  components: { EditGroceryButton, AddGroceryButton, ListMenu },
   data: () => ({
     currentRoute: ''
   }),
   created() {
     this.currentRoute = this.$router.currentRoute.name
-    this.fetchGroceries()
   },
   computed: mapGetters(['groceries']),
   methods: {
-    ...mapActions(['fetchGroceries', 'removeGrocery', 'toggleChecked']),
+    ...mapActions(['removeGrocery', 'toggleChecked']),
   }
 
 }

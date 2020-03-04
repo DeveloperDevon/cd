@@ -11,6 +11,7 @@
 
 <script>
 import Header from './components/layout/Header';
+import { mapActions } from 'vuex'
 
 export default {
   name: 'App',
@@ -18,9 +19,13 @@ export default {
   components: {
     Header
   },
-
+  created() {
+    this.fetchGroceries()
+  },
   data: () => ({
-    //
   }),
+  methods: {
+    ...mapActions(['fetchGroceries'])
+  }
 };
 </script>

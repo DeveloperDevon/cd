@@ -88,7 +88,6 @@
       },
       toggleAddCategoryVisible() {
         this.newCategoryVisible = !this.newCategoryVisible
-        console.log(this.newCategory)
       },
       increment () {
         this.qty = parseInt(this.qty,10) + 1

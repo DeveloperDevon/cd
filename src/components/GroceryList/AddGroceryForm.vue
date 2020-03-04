@@ -1,5 +1,6 @@
 <template>
-  <v-form @submit.prevent="addItem()">
+<div></div>
+  <!-- <v-form @submit.prevent="addItem()">
     <v-card>
       <v-card-title class="headline lighten-2" primary-title>
         Add Item
@@ -41,44 +42,44 @@
         <v-btn color="primary" type="submit">Add</v-btn>
       </v-card-actions>
     </v-card>
-  </v-form>
+  </v-form> -->
 </template>
 
 <script>
-  import { mapGetters, mapActions } from 'vuex'
+  // import { mapGetters, mapActions } from 'vuex'
 
-  export default {
-    name: 'AddGroceryForm',
-    computed: mapGetters(['groceries']),
-    created() {
-      this.fetchGroceries
-      this.categories = [...new Set(this.groceries.map(a => a.category))]
-    },
-    data() {
-      return {
-        categories: [],
-        selectedCategory: 'food',
-        newCategory: '',
-        newCategoryVisible: false,
-        newItem: '',
-        qty: 1,
-      }
-    },
-    methods: {
-      ...mapActions(['fetchGroceries', 'addGrocery']),
-      addItem() {
-        const category = this.newCategoryVisible ? this.newCategory : this.selectedCategory
-        const item = { category, checked: false, qty: this.qty, item_name: this.newItem}
-        this.addGrocery(item)
-      },
-      toggleAddCategoryVisible() {
-        this.newCategoryVisible = !this.newCategoryVisible
-      },
-      increment () {
-        this.qty = parseInt(this.qty,10) + 1
-      },
-    },
-  }
+  // export default {
+  //   name: 'AddGroceryForm',
+  //   computed: mapGetters(['groceries']),
+  //   created() {
+  //     this.fetchGroceries
+  //     this.categories = [...new Set(this.groceries.map(a => a.category))]
+  //   },
+  //   data() {
+  //     return {
+  //       categories: [],
+  //       selectedCategory: 'food',
+  //       newCategory: '',
+  //       newCategoryVisible: false,
+  //       newItem: '',
+  //       qty: 1,
+  //     }
+  //   },
+  //   methods: {
+  //     ...mapActions(['fetchGroceries', 'addGrocery']),
+  //     addItem() {
+  //       const category = this.newCategoryVisible ? this.newCategory : this.selectedCategory
+  //       const item = { category, checked: false, qty: this.qty, item_name: this.newItem}
+  //       this.addGrocery(item)
+  //     },
+  //     toggleAddCategoryVisible() {
+  //       this.newCategoryVisible = !this.newCategoryVisible
+  //     },
+  //     increment () {
+  //       this.qty = parseInt(this.qty,10) + 1
+  //     },
+  //   },
+  // }
 </script>
 
 <style lang="scss" scoped>
