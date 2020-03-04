@@ -57,29 +57,33 @@
 </template>
 
 <script>
-  import { getCategoriesMixin } from '@/mixins/get-categories'
-  import { watcherMixin } from '@/mixins/watcher'
-  import { db } from '@/db'
+  import { mapGetters, mapActions } from 'vuex'
 
   export default {
     name: 'EditGroceryButton',
-    mixins: [ getCategoriesMixin, watcherMixin ], //TODO: write func to get categories from groceries
     props: ['grocery'],
+    computed: mapGetters(['groceries']),
+    created() {
+      this.fetchGroceries
+      this.categories = [...new Set(this.groceries.map(a => a.category))]
+    },
     data() {
       return {
         dialog: false,
+        categories: [],
         selectedCategory: this.grocery.category,
         newCategory: '',
         newCategoryVisible: false,
-        newItem: this.grocery.name,
+        newItem: this.grocery.item_name,
         qty: this.grocery.qty ? this.grocery.qty : 1,
       }
     },
     methods: {
+      ...mapActions(['fetchGroceries', 'modifyGrocery']),
        updateItem() {
         const category = this.newCategoryVisible ? this.newCategory : this.selectedCategory
-        const item = { category, checked: this.grocery.checked, qty: this.qty, item_name: this.newItem}
-        db.collection('groceries').doc(this.grocery.id).set(item).then(() => { this.watcher()})
+        const item = { id: this.grocery.id, category, checked: this.grocery.checked, qty: this.qty, item_name: this.newItem}
+        this.modifyGrocery(item)
         this.dialog = false
       },
       toggleAddCategoryVisible() {

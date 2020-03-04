@@ -1,9 +1,13 @@
 export const transform = (doc) => {
   return {
     id: doc.id,
-    name: doc.data().item_name,
+    item_name: doc.data().item_name,
     category: doc.data().category,
     checked: doc.data().checked,
     qty: doc.data().qty
   }
+}
+
+export const filterCategories = (arr) => {
+  if(arr) return [...new Set(arr.map(item => item.category))];
 }

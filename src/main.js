@@ -3,6 +3,7 @@ import App from './App.vue'
 import './registerServiceWorker'
 import router from './router'
 import axios from 'axios'
+import store from './store'
 
 import * as firebase from 'firebase/app'
 import 'firebase/auth'
@@ -17,6 +18,7 @@ let app
 firebase.auth().onAuthStateChanged(() => {
   if(!app) app = new Vue({
     router,
+    store,
     vuetify,
     render: h => h(App)
   }).$mount('#app')

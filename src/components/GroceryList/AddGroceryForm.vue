@@ -45,14 +45,18 @@
 </template>
 
 <script>
-  import { getCategoriesMixin } from '@/mixins/get-categories'
-  import { watcherMixin } from '@/mixins/watcher'
+  import { mapGetters, mapActions } from 'vuex'
 
   export default {
     name: 'AddGroceryForm',
-    mixins: [ getCategoriesMixin, watcherMixin ],
+    computed: mapGetters(['groceries']),
+    created() {
+      this.fetchGroceries
+      this.categories = [...new Set(this.groceries.map(a => a.category))]
+    },
     data() {
       return {
+        categories: [],
         selectedCategory: 'food',
         newCategory: '',
         newCategoryVisible: false,
@@ -61,19 +65,18 @@
       }
     },
     methods: {
+      ...mapActions(['fetchGroceries', 'addGrocery']),
       addItem() {
         const category = this.newCategoryVisible ? this.newCategory : this.selectedCategory
         const item = { category, checked: false, qty: this.qty, item_name: this.newItem}
-        this.$emit('addItem', { item, dialog: false })
-        this.newItem = ''
+        this.addGrocery(item)
       },
       toggleAddCategoryVisible() {
         this.newCategoryVisible = !this.newCategoryVisible
-        console.log(this.newCategory)
       },
       increment () {
         this.qty = parseInt(this.qty,10) + 1
-      }
+      },
     },
   }
 </script>
