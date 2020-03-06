@@ -16,7 +16,7 @@
             <tr>
               <th class="text-left">Qty</th>
               <th class="text-left">Item</th>
-              <th class="text-center"><ListMenu /></th>
+              <th class="text-right"><ListMenu /></th>
             </tr>
           </thead>
           <tbody>
@@ -24,14 +24,8 @@
               <td>{{ grocery.qty }}</td>
               <td @click="toggleChecked(grocery)" v-bind:class="{ checked: grocery.checked }">{{ grocery.item_name }}</td>
               <td class="text-right">
-                <v-row>
-                  <v-col cols="3">
-                    <EditGroceryButton :grocery="grocery"/>
-                  </v-col>
-                  <v-col cols="3">
-                    <v-icon @click="removeGrocery(grocery.id)" dense color="red">mdi-delete</v-icon>
-                  </v-col>
-                </v-row>
+                <EditGroceryButton style="display: inline; padding-right: 7px !important;" :grocery="grocery"/>
+                <v-icon @click="removeGrocery(grocery.id)" dense color="red">mdi-delete</v-icon>
               </td>
             </tr>
           </tbody>

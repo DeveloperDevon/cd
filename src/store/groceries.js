@@ -42,7 +42,7 @@ const actions = {
 }
 
 const mutations = {
-  setGroceries: (state, groceries) => state.groceries = groceries.sort((a,b) => a.item_name > b.item_name),
+  setGroceries: (state, groceries) => state.groceries = groceries,
   newGrocery: (state, grocery) => state.groceries.push(grocery),
   deleteGrocery: (state, id) =>  state.groceries = state.groceries.filter(grocery => grocery.id !== id),
   deleteChecked: (state) => state.groceries = state.groceries.filter(grocery => grocery.checked !== true),

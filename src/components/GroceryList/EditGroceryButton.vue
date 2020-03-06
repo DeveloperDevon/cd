@@ -2,7 +2,7 @@
   <v-container>
     <v-dialog v-model="dialog" width="500">
 
-      <template style="padding: 0px !important" v-slot:activator="{ on }">
+      <template v-slot:activator="{ on }">
           <v-icon dense color="orange" v-on="on">mdi-pencil</v-icon>
       </template>
 

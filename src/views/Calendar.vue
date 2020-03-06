@@ -51,6 +51,8 @@
     data: () => ({
       type: 'month',
       types: ['month', 'week', 'day', '4day'],
+      mode: 'stack',
+      modes: ['stack', 'column'],
       weekday: [0, 1, 2, 3, 4, 5, 6],
       weekdays: [
         { text: 'Sun - Sat', value: [0, 1, 2, 3, 4, 5, 6] },
@@ -60,7 +62,7 @@
       ],
       value: '',
       events: [],
-      colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
+      colors: [],
       names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
     }),
     methods: {

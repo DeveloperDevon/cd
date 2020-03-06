@@ -39,6 +39,7 @@
 
 <script>
     import { auth } from '@/db'
+    import store from '@/store'
 
     export default {
     data() {
@@ -57,10 +58,12 @@
       }
     },
     methods: {
+        // store: store,
         login() {
             auth.signInWithEmailAndPassword(this.email, this.password)
             .then((a) => {
-                console.log('+_+_+', a)
+                console.log('from comp', store, this.store)
+                store.commit('auth/setUser', a.user.email)
                 this.$emit('loggedIn', a)
                 this.$router.replace({name: 'dashboard'})
                 this.dialog=false
@@ -68,7 +71,6 @@
                 this.password = ''
             })
             .catch(e => this.error = e)
-            
         }
     }
     }
