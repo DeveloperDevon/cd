@@ -12,6 +12,7 @@
 <script>
 import Header from './components/layout/Header';
 import { mapActions } from 'vuex'
+import { auth } from '@/db'
 
 export default {
   name: 'App',
@@ -21,6 +22,11 @@ export default {
   },
   created() {
     this.fetchGroceries()
+    if (auth.currentUser) {
+      this.$store.commit('setAuthenticated', true)
+      this.$store.commit('setUser', auth.currentUser.email)
+    }
+    console.log(auth.currentUser)
   },
   data: () => ({
   }),

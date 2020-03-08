@@ -6,7 +6,7 @@
         <div v-on="on">Login <v-icon>mdi-login-variant</v-icon></div>
       </template>
 
-        <v-form @submit.prevent="login()" v-model="valid">
+        <v-form @submit.prevent="signIn()" v-model="valid">
             <v-card>
             <v-container>
                 <v-card-title class="headline lighten-2" primary-title>
@@ -38,41 +38,40 @@
 </template>
 
 <script>
-    import { auth } from '@/db'
-    import store from '@/store'
+    import { mapGetters,mapActions } from 'vuex'
 
     export default {
-    data() {
-      return {
-        dialog: '',
-        email: '',
-        password: '',
-        error: '',
-        valid: false,
-        passwordRules: [
-        v => !!v || 'Name is required',
-        ],
-        emailRules: [
-        v => !!v || 'E-mail is required',
-        ],
-      }
-    },
-    methods: {
-        // store: store,
-        login() {
-            auth.signInWithEmailAndPassword(this.email, this.password)
-            .then((a) => {
-                console.log('from comp', store, this.store)
-                store.commit('auth/setUser', a.user.email)
-                this.$emit('loggedIn', a)
-                this.$router.replace({name: 'dashboard'})
-                this.dialog=false
-                this.email = ''
-                this.password = ''
-            })
-            .catch(e => this.error = e)
+      data() {
+        return {
+          dialog: '',
+          email: '',
+          password: '',
+          error: '',
+          valid: false,
+          passwordRules: [
+          v => !!v || 'Name is required',
+          ],
+          emailRules: [
+          v => !!v || 'E-mail is required',
+          ],
         }
-    }
+      },
+      computed: mapGetters(['loggedIn', 'authError']),
+      methods: {
+        ...mapActions(['login']),
+        async signIn() {
+          const creds = {email: this.email, password: this.password}
+          await this.login(creds).then(() => {
+            if(this.loggedIn) {
+              this.$router.replace({name: 'dashboard'})
+              this.dialog=false
+              this.email = ''
+              this.password = ''
+            }
+            if(this.authError) this.error = this.authError
+          })
+        }
+      }
     }
 </script>
 

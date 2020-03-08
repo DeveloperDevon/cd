@@ -9,6 +9,14 @@ import * as firebase from 'firebase/app'
 import 'firebase/auth'
 import vuetify from './plugins/vuetify';
 
+const ignoreWarnMessage = 'The .native modifier for v-on is only valid on components but it was used on <div>.';
+Vue.config.warnHandler = function (msg) {
+  // `trace` is the component hierarchy trace
+  if (msg === ignoreWarnMessage) {
+    msg = null;
+  }
+}
+
 Vue.prototype.$axios = axios
 
 Vue.config.productionTip = false
