@@ -26,7 +26,13 @@
       <v-dialog v-model="dialog" max-width="500">
         <v-card class="add-event-dialog">
           <v-container>
-            <v-form @submit.prevent="addEvent">
+            <v-form @submit.prevent="insertEvent">
+              <v-card-title class="headline lighten-2 pr-0" primary-title>
+              <span style="margin-left: 27%">{{ dialogMode }} Event</span>
+              <v-icon @click="deleteEvent" v-if="deleteVisible" color="red" style="margin-left: auto; font-size:30px">
+                mdi-delete
+              </v-icon>
+              </v-card-title>
               <v-text-field v-model="name" type="text" label="Event"></v-text-field>
               <v-row class="dates">
                 <v-col cols="6">
@@ -73,7 +79,7 @@
               </v-row>
               <v-textarea v-model="details" type="text" label="Details" height="25px"></v-textarea>
               <v-btn type="submit" color="primary" @click.stop="dialog = false">
-                create event
+                {{ dialogMode }}
               </v-btn>
             </v-form>
           </v-container>
@@ -89,9 +95,8 @@
   :event-margin-bottom="3"
   :now="today"
   :type="type"
-  @click:event="showEvent"
+  @click:event="showDialog"
   @click:date="showDialog"
-  @change="updateRange"
   ></v-calendar>
   <v-menu
   v-model="selectedOpen"
@@ -100,42 +105,6 @@
   full-width
   offset-x
   >
-  <v-card color="grey lighten-4" :width="350" flat>
-    <v-toolbar :color="selectedEvent.color" dark>
-      <v-btn @click="deleteEvent(selectedEvent.id)" icon>
-        <v-icon>mdi-delete</v-icon>
-      </v-btn>
-      <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
-      <div class="flex-grow-1"></div>
-    </v-toolbar>
-
-    <v-card-text>
-      <form v-if="currentlyEditing !== selectedEvent.id">
-        {{ selectedEvent.details }}
-      </form>
-      <form v-else>
-        <textarea-autosize
-        v-model="selectedEvent.details"
-        type="text"
-        style="width: 100%"
-        :min-height="100"
-        placeholder="add note">
-      </textarea-autosize>
-    </form>
-  </v-card-text>
-
-  <v-card-actions>
-    <v-btn text color="secondary" @click="selectedOpen = false">
-      close
-    </v-btn>
-    <v-btn v-if="currentlyEditing !== selectedEvent.id" text @click.prevent="editEvent(selectedEvent)">
-      edit
-    </v-btn>
-    <v-btn text v-else type="submit" @click.prevent="updateEvent(selectedEvent)">
-      Save
-    </v-btn>
-  </v-card-actions>
-</v-card>
 </v-menu>
 </v-sheet>
 </v-col>
@@ -164,13 +133,28 @@ export default {
     selectedOpen: false,
     events: [],
     dialog: false,
+    dialogTitle: '',
+    eventId: null,
     startDate: null,
     endDate: null,
+    deleteVisible: false,
     miniCal1: false,
     miniCal2: false,
   }),
   mounted () {
     this.getEvents()
+  },
+  watch: {
+    dialog(val) {
+      if(!val) {
+        setTimeout(() => {
+          this.name = ''
+          this.startDate = ''
+          this.endDate = ''
+          this.details = ''
+        }, 500)
+      } 
+    }
   },
   computed: {
     computedStartDateFormatted () {
@@ -191,17 +175,22 @@ export default {
       let snapshot = await db.collection('calEvent').get()
       const events = []
       snapshot.forEach(doc => {
-        console.log(doc.data())
         let appData = doc.data()
+        appData.id = doc.id
         events.push(appData)
       })
       this.events = events
     },
-    showDialog( { date }) {
-      this.startDate = date
-      this.endDate = date
+    showDialog( { date, event }) {
+      this.dialogMode = event ? "Edit" : date ? "Add" : "New"
+      this.eventId = event ? event.id : null
+      this.name = event ? event.name : ''
+      this.startDate = event ? event.start : date ? date : ''
+      this.endDate = event ? event.end : date ? date : ''
+      this.details = event ? event.details : ''
       this.dialog = true
       this.focus = date
+      this.deleteVisible = event ? true : false
     },
     setToday () {
       this.focus = this.today
@@ -218,40 +207,33 @@ export default {
         const [year, month, day] = date.split('-')
         return `${month}/${day}/${year}`
     },
-    async addEvent () {
-      console.log(this.name, this.startDate, this.endDate, this.details)
-      if (this.name && this.start && this.end) {
-        await db.collection("calEvent").add({
-          name: this.name,
-          details: this.details,
-          start: this.startDate,
-          end: this.endDate,
-        })
+    async insertEvent () {
+      if (this.name && this.startDate && this.endDate) {
+        const insertType = this.dialogMode
+        const event = {
+        name: this.name,
+        details: this.details,
+        start: this.startDate,
+        end: this.endDate,
+      }
+        insertType === 'Edit' ? await db.collection('calEvent').doc(this.eventId).update(event) :
+        await db.collection("calEvent").add(event)
+        
         this.getEvents()
-        this.name = '',
-        this.details = '',
-        this.start = '',
-        this.end = ''
-      } else {
+        this.dialog = false
+      }
+      else {
         alert('You must enter event name, start, and end time')
       }
     },
-    editEvent (ev) {
-      this.currentlyEditing = ev.id
-    },
-    async updateEvent (ev) {
-      await db.collection('calEvent').doc(this.currentlyEditing).update({
-        details: ev.details
-      })
-      this.selectedOpen = false,
-      this.currentlyEditing = null
-    },
-    async deleteEvent (ev) {
-      await db.collection("calEvent").doc(ev).delete()
-      this.selectedOpen = false,
+    async deleteEvent() {
+      console.log(this.eventId)
+      await db.collection("calEvent").doc(this.eventId).delete()
       this.getEvents()
+      this.dialog = false
     },
     showEvent ({ nativeEvent, event }) {
+      this.dialog = true
       console.log({nativeEvent, event})
       const open = () => {
         this.selectedEvent = event
