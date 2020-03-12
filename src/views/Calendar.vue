@@ -1,7 +1,7 @@
 <template>
   <v-row class="fill-height">
-    <v-col>
-      <v-sheet height="64">
+    <v-col class="py-0">
+      <v-sheet>
         <v-toolbar flat color="white">
           <v-btn fab text small @click="prev">
             <v-icon small>mdi-chevron-left</v-icon>
@@ -31,8 +31,7 @@
               <v-row class="dates">
                 <v-col cols="6">
                   <v-menu
-                    ref="menu1"
-                    v-model="menu1"
+                    v-model="miniCal1"
                     :close-on-content-click="false"
                     transition="scale-transition"
                     offset-y
@@ -43,17 +42,17 @@
                       <v-text-field
                         v-model="computedStartDateFormatted"
                         label="Start"
-                        @blur="date = parseDate(dateFormatted)"
+                        readonly
                         v-on="on"
                       ></v-text-field>
                     </template>
-                    <v-date-picker v-model="startDate" no-title @input="menu1 = false"></v-date-picker>
+                    <v-date-picker v-model="startDate" no-title @input="miniCal1 = false"></v-date-picker>
                   </v-menu>
                 </v-col>
 
                 <v-col cols="6">
                   <v-menu
-                    v-model="menu2"
+                    v-model="miniCal2"
                     :close-on-content-click="false"
                     transition="scale-transition"
                     offset-y
@@ -68,7 +67,7 @@
                         v-on="on"
                       ></v-text-field>
                     </template>
-                    <v-date-picker v-model="endDate" no-title @input="menu2 = false"></v-date-picker>
+                    <v-date-picker v-model="endDate" no-title @input="miniCal2 = false"></v-date-picker>
                   </v-menu>
                 </v-col>
               </v-row>
@@ -91,7 +90,6 @@
   :now="today"
   :type="type"
   @click:event="showEvent"
-  @click:more="viewDay"
   @click:date="showDialog"
   @change="updateRange"
   ></v-calendar>
@@ -157,56 +155,29 @@ export default {
       day: 'Day',
       '4day': '4 Days',
     },
+    color: '#1976D2', // default event color
     name: null,
     details: null,
-    start: null,
-    end: null,
-    color: '#1976D2', // default event color
     currentlyEditing: null,
     selectedEvent: {},
     selectedElement: null,
     selectedOpen: false,
     events: [],
     dialog: false,
-    startDate: '',
-    endDate: '',
-    // dateFormatted: vm.formatDate(new Date().toISOString().substr(0, 10)),
-    menu1: false,
-    menu2: false,
+    startDate: null,
+    endDate: null,
+    miniCal1: false,
+    miniCal2: false,
   }),
   mounted () {
     this.getEvents()
   },
   computed: {
-    title () {
-      const { start, end } = this
-      if (!start || !end) {
-        return ''
-      }
-      const startMonth = this.monthFormatter(start)
-      const endMonth = this.monthFormatter(end)
-      const suffixMonth = startMonth === endMonth ? '' : endMonth
-      const startYear = start.year
-      const endYear = end.year
-      const suffixYear = startYear === endYear ? '' : endYear
-      const startDay = start.day + this.nth(start.day)
-      const endDay = end.day + this.nth(end.day)
-      switch (this.type) {
-        case 'month':
-        return `${startMonth} ${startYear}`
-        case 'week':
-        case '4day':
-        return `${startMonth} ${startDay} ${startYear} - ${suffixMonth} ${endDay} ${suffixYear}`
-        case 'day':
-        return `${startMonth} ${startDay} ${startYear}`
-      }
-      return ''
-    },
     computedStartDateFormatted () {
-        return this.formatDate(this.startDate)
+      return this.formatDate(this.startDate)
     },
     computedEndDateFormatted () {
-        return this.formatDate(this.endDate)
+      return this.formatDate(this.endDate)
     },
     monthFormatter () {
       return this.$refs.calendar.getFormatter({
@@ -214,27 +185,23 @@ export default {
       })
     }
   },
+
   methods: {
     async getEvents () {
       let snapshot = await db.collection('calEvent').get()
       const events = []
       snapshot.forEach(doc => {
+        console.log(doc.data())
         let appData = doc.data()
-        appData.id = doc.id
         events.push(appData)
       })
       this.events = events
     },
     showDialog( { date }) {
+      this.startDate = date
+      this.endDate = date
       this.dialog = true
       this.focus = date
-    },
-    viewDay ({ date }) {
-      this.focus = date
-      this.type = 'day'
-    },
-    getEventColor (event) {
-      return event.color
     },
     setToday () {
       this.focus = this.today
@@ -251,19 +218,14 @@ export default {
         const [year, month, day] = date.split('-')
         return `${month}/${day}/${year}`
     },
-    parseDate (date) {
-      if (!date) return null
-
-      const [month, day, year] = date.split('/')
-      return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
-    },
     async addEvent () {
+      console.log(this.name, this.startDate, this.endDate, this.details)
       if (this.name && this.start && this.end) {
         await db.collection("calEvent").add({
           name: this.name,
           details: this.details,
-          start: this.start,
-          end: this.end,
+          start: this.startDate,
+          end: this.endDate,
         })
         this.getEvents()
         this.name = '',
@@ -290,6 +252,7 @@ export default {
       this.getEvents()
     },
     showEvent ({ nativeEvent, event }) {
+      console.log({nativeEvent, event})
       const open = () => {
         this.selectedEvent = event
         this.selectedElement = nativeEvent.target
@@ -306,11 +269,6 @@ export default {
     updateRange ({ start, end }) {
       this.start = start
       this.end = end
-    },
-    nth (d) {
-      return d > 3 && d < 21
-      ? 'th'
-      : ['th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th'][d % 10]
     }
   }
 }
