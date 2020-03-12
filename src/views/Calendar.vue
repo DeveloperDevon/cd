@@ -1,4 +1,4 @@
-<template>
+<template v-if="events">
   <v-row class="fill-height">
     <v-col class="py-0">
       <v-sheet>
@@ -112,18 +112,13 @@
 </template>
 
 <script>
-import { db } from '@/db'
+import { mapGetters, mapActions } from 'vuex'
+
 export default {
   data: () => ({
     today: new Date().toISOString().substr(0, 10),
     focus: new Date().toISOString().substr(0, 10),
     type: 'month',
-    typeToLabel: {
-      month: 'Month',
-      week: 'Week',
-      day: 'Day',
-      '4day': '4 Days',
-    },
     color: '#1976D2', // default event color
     name: null,
     details: null,
@@ -131,7 +126,6 @@ export default {
     selectedEvent: {},
     selectedElement: null,
     selectedOpen: false,
-    events: [],
     dialog: false,
     dialogTitle: '',
     eventId: null,
@@ -141,9 +135,6 @@ export default {
     miniCal1: false,
     miniCal2: false,
   }),
-  mounted () {
-    this.getEvents()
-  },
   watch: {
     dialog(val) {
       if(!val) {
@@ -157,6 +148,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['events']),
     computedStartDateFormatted () {
       return this.formatDate(this.startDate)
     },
@@ -171,16 +163,7 @@ export default {
   },
 
   methods: {
-    async getEvents () {
-      let snapshot = await db.collection('calEvent').get()
-      const events = []
-      snapshot.forEach(doc => {
-        let appData = doc.data()
-        appData.id = doc.id
-        events.push(appData)
-      })
-      this.events = events
-    },
+    ...mapActions(['addEvent', 'updateEvent', 'removeGrocery']),
     showDialog( { date, event }) {
       this.dialogMode = event ? "Edit" : date ? "Add" : "New"
       this.eventId = event ? event.id : null
@@ -203,7 +186,6 @@ export default {
     },
     formatDate (date) {
         if (!date) return null
-
         const [year, month, day] = date.split('-')
         return `${month}/${day}/${year}`
     },
@@ -216,10 +198,8 @@ export default {
         start: this.startDate,
         end: this.endDate,
       }
-        insertType === 'Edit' ? await db.collection('calEvent').doc(this.eventId).update(event) :
-        await db.collection("calEvent").add(event)
-        
-        this.getEvents()
+        insertType === 'Edit' ? this.updateEvent({ id: this.eventId, ...event }) :
+        this.addEvent(event)
         this.dialog = false
       }
       else {
@@ -227,30 +207,8 @@ export default {
       }
     },
     async deleteEvent() {
-      console.log(this.eventId)
-      await db.collection("calEvent").doc(this.eventId).delete()
-      this.getEvents()
+      this.removeGrocery(this.eventId)
       this.dialog = false
-    },
-    showEvent ({ nativeEvent, event }) {
-      this.dialog = true
-      console.log({nativeEvent, event})
-      const open = () => {
-        this.selectedEvent = event
-        this.selectedElement = nativeEvent.target
-        setTimeout(() => this.selectedOpen = true, 10)
-      }
-      if (this.selectedOpen) {
-        this.selectedOpen = false
-        setTimeout(open, 10)
-      } else {
-        open()
-      }
-      nativeEvent.stopPropagation()
-    },
-    updateRange ({ start, end }) {
-      this.start = start
-      this.end = end
     }
   }
 }

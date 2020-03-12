@@ -1,10 +1,20 @@
-export const transform = (doc) => {
+export const transformGroceries = (doc) => {
   return {
     id: doc.id,
     item_name: doc.data().item_name,
     category: doc.data().category,
     checked: doc.data().checked,
     qty: doc.data().qty
+  }
+}
+
+export const transformEvents = (doc) => {
+  return {
+    id: doc.id,
+    name: doc.data().name,
+    start: doc.data().start,
+    end: doc.data().end,
+    details: doc.data().details
   }
 }
 

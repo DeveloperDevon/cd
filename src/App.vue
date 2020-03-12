@@ -22,6 +22,7 @@ export default {
   },
   created() {
     this.fetchGroceries()
+    this.fetchEvents()
     if (auth.currentUser) {
       this.$store.commit('setAuthenticated', true)
       this.$store.commit('setUser', auth.currentUser.email)
@@ -31,7 +32,7 @@ export default {
   data: () => ({
   }),
   methods: {
-    ...mapActions(['fetchGroceries'])
+    ...mapActions(['fetchGroceries', 'fetchEvents'])
   }
 };
 </script>

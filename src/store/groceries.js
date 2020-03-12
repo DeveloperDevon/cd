@@ -1,5 +1,5 @@
 import { db } from '../db'
-import { transform } from '../helpers'
+import { transformGroceries } from '../helpers'
 import * as firebase from 'firebase'
 
 const state = {
@@ -12,7 +12,10 @@ const getters = {
 
 const actions = {
   async fetchGroceries({ commit }) {
-    const data = await db.collection('groceries').orderBy('timestamp', 'asc').get().then((queryData) => queryData.docs.map((doc) => transform(doc)))
+    const data = await db.collection('groceries')
+    .orderBy('timestamp', 'asc')
+    .get()
+    .then((queryData) => queryData.docs.map((doc) => transformGroceries(doc)))
     commit('setGroceries', data)
   },
   async addGrocery({ commit }, grocery) {
@@ -36,7 +39,10 @@ const actions = {
     await db.collection('groceries').doc(grocery.id).update({checked: !grocery.checked}).then(commit('updateChecked', grocery))
   },
   async sortBy({ commit }, sortByField) {
-    const data = await db.collection('groceries').orderBy(sortByField).get().then((queryData) => queryData.docs.map((doc) => transform(doc)))
+    const data = await db.collection('groceries')
+    .orderBy(sortByField)
+    .get()
+    .then((queryData) => queryData.docs.map((doc) => transformGroceries(doc)))
     commit('sortGroceries', data)
   }
 }
