@@ -6,73 +6,74 @@
           <v-btn fab text small @click="prev">
             <v-icon small>mdi-chevron-left</v-icon>
           </v-btn>
-          <!-- <v-btn color="primary" dark @click.stop="dialog = true">
-            New Event
-          </v-btn> -->
+          <v-btn  outlined @click.stop="showDialog" class="new-btn">
+            New
+          </v-btn>
           <v-spacer></v-spacer>
           <v-spacer></v-spacer>
-          <v-btn outlined class="mr-4" @click="setToday">
+          <v-btn outlined @click="setToday">
             Today
           </v-btn>
           <v-spacer></v-spacer>
           <v-spacer></v-spacer>
           <v-btn fab text small @click="next">
-            <v-icon small>mdi-chevron-right</v-icon>
+            <v-icon small class="next-btn">mdi-chevron-right</v-icon>
           </v-btn>
           <div class="flex-grow-1"></div>
-          <!-- <v-menu bottom right>
-            <template v-slot:activator="{ on }">
-              <v-btn outlined v-on="on">
-                <span>{{ typeToLabel[type] }}</span>
-                <v-icon right>mdi-menu-down</v-icon>
-              </v-btn>
-            </template>
-
-            <v-list>
-              <v-list-item @click="type = 'day'">
-                <v-list-item-title>Day</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="type = 'week'">
-                <v-list-item-title>Week</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="type = 'month'">
-                <v-list-item-title>Month</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="type = '4day'">
-                <v-list-item-title>4 days</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu> -->
         </v-toolbar>
       </v-sheet>
 
       <v-dialog v-model="dialog" max-width="500">
-        <v-card>
+        <v-card class="add-event-dialog">
           <v-container>
             <v-form @submit.prevent="addEvent">
-              <v-text-field v-model="name" type="text" label="event name (required)"></v-text-field>
-              <v-text-field v-model="details" type="text" label="detail"></v-text-field>
-              <v-text-field v-model="start" type="date" label="start (required)"></v-text-field>
-              <v-text-field v-model="end" type="date" label="end (required)"></v-text-field>
-              <v-text-field v-model="color" type="color" label="color (click to open color menu)"></v-text-field>
-              <v-btn type="submit" color="primary" class="mr-4" @click.stop="dialog = false">
-                create event
-              </v-btn>
-            </v-form>
-          </v-container>
-        </v-card>
-      </v-dialog>
+              <v-text-field v-model="name" type="text" label="Event"></v-text-field>
+              <v-row class="dates">
+                <v-col cols="6">
+                  <v-menu
+                    ref="menu1"
+                    v-model="menu1"
+                    :close-on-content-click="false"
+                    transition="scale-transition"
+                    offset-y
+                    max-width="290px"
+                    min-width="290px"
+                  >
+                    <template v-slot:activator="{ on }">
+                      <v-text-field
+                        v-model="computedStartDateFormatted"
+                        label="Start"
+                        @blur="date = parseDate(dateFormatted)"
+                        v-on="on"
+                      ></v-text-field>
+                    </template>
+                    <v-date-picker v-model="startDate" no-title @input="menu1 = false"></v-date-picker>
+                  </v-menu>
+                </v-col>
 
-      <v-dialog v-model="dialogDate" max-width="500">
-        <v-card>
-          <v-container>
-            <v-form @submit.prevent="addEvent">
-              <v-text-field v-model="name" type="text" label="event name (required)"></v-text-field>
-              <v-text-field v-model="details" type="text" label="detail"></v-text-field>
-              <v-text-field v-model="start" type="date" label="start (required)"></v-text-field>
-              <v-text-field v-model="end" type="date" label="end (required)"></v-text-field>
-              <v-text-field v-model="color" type="color" label="color (click to open color menu)"></v-text-field>
-              <v-btn type="submit" color="primary" class="mr-4" @click.stop="dialog = false">
+                <v-col cols="6">
+                  <v-menu
+                    v-model="menu2"
+                    :close-on-content-click="false"
+                    transition="scale-transition"
+                    offset-y
+                    max-width="290px"
+                    min-width="290px"
+                  >
+                    <template v-slot:activator="{ on }">
+                      <v-text-field
+                        v-model="computedEndDateFormatted"
+                        label="End"
+                        readonly
+                        v-on="on"
+                      ></v-text-field>
+                    </template>
+                    <v-date-picker v-model="endDate" no-title @input="menu2 = false"></v-date-picker>
+                  </v-menu>
+                </v-col>
+              </v-row>
+              <v-textarea v-model="details" type="text" label="Details" height="25px"></v-textarea>
+              <v-btn type="submit" color="primary" @click.stop="dialog = false">
                 create event
               </v-btn>
             </v-form>
@@ -86,13 +87,12 @@
   v-model="focus"
   color="primary"
   :events="events"
-  :event-color="getEventColor"
   :event-margin-bottom="3"
   :now="today"
   :type="type"
   @click:event="showEvent"
   @click:more="viewDay"
-  @click:date="setDialogDate"
+  @click:date="showDialog"
   @change="updateRange"
   ></v-calendar>
   <v-menu
@@ -168,7 +168,11 @@ export default {
     selectedOpen: false,
     events: [],
     dialog: false,
-    dialogDate: false
+    startDate: '',
+    endDate: '',
+    // dateFormatted: vm.formatDate(new Date().toISOString().substr(0, 10)),
+    menu1: false,
+    menu2: false,
   }),
   mounted () {
     this.getEvents()
@@ -198,6 +202,12 @@ export default {
       }
       return ''
     },
+    computedStartDateFormatted () {
+        return this.formatDate(this.startDate)
+    },
+    computedEndDateFormatted () {
+        return this.formatDate(this.endDate)
+    },
     monthFormatter () {
       return this.$refs.calendar.getFormatter({
         timeZone: 'UTC', month: 'long',
@@ -215,8 +225,8 @@ export default {
       })
       this.events = events
     },
-    setDialogDate( { date }) {
-      this.dialogDate = true
+    showDialog( { date }) {
+      this.dialog = true
       this.focus = date
     },
     viewDay ({ date }) {
@@ -235,6 +245,18 @@ export default {
     next () {
       this.$refs.calendar.next()
     },
+    formatDate (date) {
+        if (!date) return null
+
+        const [year, month, day] = date.split('-')
+        return `${month}/${day}/${year}`
+    },
+    parseDate (date) {
+      if (!date) return null
+
+      const [month, day, year] = date.split('/')
+      return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+    },
     async addEvent () {
       if (this.name && this.start && this.end) {
         await db.collection("calEvent").add({
@@ -242,14 +264,12 @@ export default {
           details: this.details,
           start: this.start,
           end: this.end,
-          color: this.color
         })
         this.getEvents()
         this.name = '',
         this.details = '',
         this.start = '',
-        this.end = '',
-        this.color = ''
+        this.end = ''
       } else {
         alert('You must enter event name, start, and end time')
       }
@@ -295,3 +315,22 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .add-event-dialog {
+    padding: 20px
+  }
+
+  .new-btn {
+    margin-left: 45px;
+    width: 84.3px;
+  }
+
+  .next-btn {
+    padding-left: 15px;
+  }
+
+  .dates {
+    margin-bottom: 55px;
+  }
+</style>
