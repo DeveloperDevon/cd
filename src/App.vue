@@ -27,7 +27,6 @@ export default {
       this.$store.commit('setAuthenticated', true)
       this.$store.commit('setUser', auth.currentUser.email)
     }
-    console.log(auth.currentUser)
   },
   data: () => ({
   }),

@@ -3,7 +3,7 @@
     <v-dialog v-model="dialog" width="500">
 
       <template v-slot:activator="{ on }">
-          <v-icon dense color="orange" v-on="on">mdi-pencil</v-icon>
+          <v-icon dense color="primary" v-on="on">mdi-pencil</v-icon>
       </template>
 
       <template>

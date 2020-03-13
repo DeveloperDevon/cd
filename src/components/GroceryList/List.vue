@@ -4,16 +4,16 @@
       <v-col>
         <v-row class="px-3">
           <router-link style="text-decoration: none" to="/groceries">
-            <h3 class="pl-4">Grocery List</h3>
+            <h3 class="pl-4 mb-3 text-white">Grocery List</h3>
           </router-link>
           <v-spacer></v-spacer>
-          <h3 v-if="groceries" style="color: #1976d2" class="pr-4">
+          <h3 v-if="groceries" style="color: #FFFFFF" class="pr-4">
             {{groceries.filter(a => a.checked === true).length}}/{{groceries.length}}
           </h3>
         </v-row>
         <v-simple-table v-if="this.currentRoute === 'groceries'" fixed-header height="480">
           <thead>
-            <tr>
+            <tr class="table-header">
               <th class="text-left">Qty</th>
               <th class="text-left">Item</th>
               <th class="text-right"><ListMenu /></th>
@@ -60,8 +60,18 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+  .theme--dark.v-data-table {
+    background-color: #121212
+  }
+  th {
+    background-color: #121212 !important;
+  }
+  .text-white {
+    color: #FFFFFF;
+  }
   .checked {
+    color: #FF5722;
     text-decoration: line-through;
   }
 </style>

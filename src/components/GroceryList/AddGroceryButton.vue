@@ -3,7 +3,7 @@
     <v-dialog v-model="dialog" width="500">
 
       <template v-slot:activator="{ on }">
-        <v-btn class="mb-10" fab absolute bottom right color="primary" dark v-on="on">
+        <v-btn class="mb-10" fab absolute bottom right color="secondary" dark v-on="on">
           <v-icon>mdi-plus</v-icon>
         </v-btn>
       </template>

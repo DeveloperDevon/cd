@@ -2,7 +2,7 @@
   <v-row class="fill-height">
     <v-col class="py-0">
       <v-sheet>
-        <v-toolbar flat color="white">
+        <v-toolbar flat >
           <v-btn fab text small @click="prev">
             <v-icon small>mdi-chevron-left</v-icon>
           </v-btn>
@@ -215,6 +215,10 @@ export default {
 </script>
 
 <style scoped>
+  .theme--dark.v-btn:not(.v-btn--flat):not(.v-btn--text):not(.v-btn--outlined) {
+    background-color: #FF5722 !important;
+  }
+
   .add-event-dialog {
     padding: 20px
   }

@@ -13,7 +13,7 @@ const getters = {
 const actions = {
   async fetchGroceries({ commit }) {
     const data = await db.collection('groceries')
-    .orderBy('timestamp', 'asc')
+    .orderBy('checked', 'asc')
     .get()
     .then((queryData) => queryData.docs.map((doc) => transformGroceries(doc)))
     commit('setGroceries', data)
