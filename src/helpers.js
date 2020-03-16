@@ -18,6 +18,16 @@ export const transformEvents = (doc) => {
   }
 }
 
+export const transformRecipes = (doc) => {
+  return {
+    id: doc.id,
+    name: doc.data().name,
+    ingredients: doc.data().ingredients,
+    directions: doc.data().directions,
+    cookTime: doc.data().cookTime
+  }
+}
+
 export const filterCategories = (arr) => {
   if(arr) return [...new Set(arr.map(item => item.category))];
 }

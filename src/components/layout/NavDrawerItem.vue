@@ -14,7 +14,7 @@
         props: ['route', 'icon', 'title'],
         methods: {
         routeTo(route) {
-        if (this.$router.currentRoute.name != route ) this.$router.replace({ name: route })
+        if (this.$router.currentRoute.name != route ) this.$router.push({ name: route })
         this.$store.commit('setDrawer', false)
         }
     }

@@ -32,7 +32,7 @@
         </v-simple-table>
       </v-col>
     </v-row>
-    <AddGroceryButton v-if="this.currentRoute === 'groceries'" />
+    <AddGroceryButton />
   </v-container>
 </template>
 

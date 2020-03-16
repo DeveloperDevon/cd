@@ -36,7 +36,9 @@ const actions = {
     await db.collection('groceries').doc(grocery.id).set(grocery).then(commit('modifyGrocery', grocery))
   },
   async toggleChecked({commit}, grocery) {
-    await db.collection('groceries').doc(grocery.id).update({checked: !grocery.checked}).then(commit('updateChecked', grocery))
+    await db.collection('groceries').doc(grocery.id)
+    .update({checked: !grocery.checked})
+    .then(commit('updateChecked', grocery))
   },
   async sortBy({ commit }, sortByField) {
     const data = await db.collection('groceries')
@@ -56,7 +58,12 @@ const mutations = {
     const index = state.groceries.findIndex(g => g.id === grocery.id)
     if(index !== -1) state.groceries.splice(index, 1, grocery)
   },
-  updateChecked: (state, grocery) => state.groceries.find(a => a.id === grocery.id).checked = !grocery.checked,
+  updateChecked: (state, grocery) => {
+    state.groceries.find(a => a.id === grocery.id).checked = !grocery.checked
+    if(grocery.checked) state.groceries.push(state.groceries.splice(state.groceries.indexOf(grocery), 1)[0])
+    if(!grocery.checked) state.groceries.unshift(state.groceries.splice(state.groceries.indexOf(grocery), 1)[0])
+    state.groceries = state.groceries.sort()
+  },
   sortGroceries: (state, groceries) => state.groceries = groceries
 }
 

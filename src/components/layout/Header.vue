@@ -8,7 +8,7 @@
       <Login />
     </v-btn>
     <v-btn style="padding-right: 0px !important;" text @click="signOut()" v-if="loggedIn">
-      Logout <v-icon>mdi-logout-variant</v-icon>
+      <v-icon>mdi-logout-variant</v-icon>
     </v-btn>
   </v-app-bar>
 </template>

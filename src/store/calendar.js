@@ -12,6 +12,7 @@ const getters = {
 const actions = {
   async fetchEvents({ commit }) {
     const data =  await db.collection('calEvent')
+    .orderBy('start', 'asc')
     .get().then((d) => d.docs.map(doc => transformEvents(doc)))
     commit('setEvents', data)
   },

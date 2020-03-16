@@ -26,6 +26,26 @@ const routes = [
     meta: {requiresAuth: true}
   },
   {
+    path: '/recipes/',
+    name: 'recipes',
+    component: () => import('../views/Recipes.vue'),
+    meta: { requiresAuth: true },
+    children: [
+      {
+        path: 'list',
+        name: 'recipesList',
+        component: () => import('../components/Recipes/RecipeList.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: 'details/:id',
+        name: 'recipeDetails',
+        component: () => import('../components/Recipes/RecipeDetails.vue'),
+        meta: { requiresAuth: true }
+      }
+    ]
+  },
+  {
     path: '/unauthorized',
     name: 'unauthorized',
     component: () => import(/* webpackChunkName: "about" */ '../views/Auth/Unauthorized.vue')

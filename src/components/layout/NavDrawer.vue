@@ -47,6 +47,7 @@
             {route: 'dashboard', icon: 'mdi-view-dashboard', title: 'Dashboard'},
             {route: 'groceries', icon: 'mdi-cart', title: 'Groceries'},
             {route: 'calendar', icon: 'mdi-calendar', title: 'Calendar'},
+            {route: 'recipesList', icon: 'mdi-pasta', title: 'Recipes'},
           ]
         }),
     }
