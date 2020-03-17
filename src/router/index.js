@@ -42,6 +42,18 @@ const routes = [
         name: 'recipeDetails',
         component: () => import('../components/Recipes/RecipeDetails.vue'),
         meta: { requiresAuth: true }
+      },
+      {
+        path: 'search',
+        name: 'searchRecipes',
+        component: () => import('../components/Recipes/SearchRecipes.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: 'search/:label',
+        name: 'searchDetails',
+        component: () => import('../components/Recipes/SearchDetails.vue'),
+        meta: { requiresAuth: true }
       }
     ]
   },

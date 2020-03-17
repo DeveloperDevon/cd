@@ -32,14 +32,10 @@
 
 <script>
 
-// import Groceries from './Groceries'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'Dashboard',
-  components: {
-    // Groceries
-  },
   computed: {
     ...mapGetters(['events', 'groceries'])
   },

@@ -3,13 +3,13 @@
     <v-row>
       <v-col>
         <v-row class="px-3">
-          <router-link style="text-decoration: none" to="/groceries">
+          <!-- <router-link style="text-decoration: none" to="/groceries">
             <h3 class="pl-4 mb-3 text-white">Grocery List</h3>
           </router-link>
           <v-spacer></v-spacer>
           <h3 v-if="groceries" style="color: #FFFFFF" class="pr-4">
             {{groceries.filter(a => a.checked === true).length}}/{{groceries.length}}
-          </h3>
+          </h3> -->
         </v-row>
         <v-simple-table v-if="this.currentRoute === 'groceries'" fixed-header height="480">
           <thead>
