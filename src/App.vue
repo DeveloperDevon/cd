@@ -1,5 +1,5 @@
 <template>
-  <v-app style="height: 100vh; overflow: hidden;">
+  <v-app style="height: 100%; overflow: hidden;">
     <Header />
     
     <v-content>

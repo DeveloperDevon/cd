@@ -24,7 +24,12 @@ export const transformRecipes = (doc) => {
     name: doc.data().name,
     ingredients: doc.data().ingredients,
     directions: doc.data().directions,
-    cookTime: doc.data().cookTime
+    cookTime: doc.data().cookTime,
+    image: doc.data().image,
+    source: doc.data().source,
+    sourceUrl: doc.data().url,
+    yields: doc.data().yield,
+    calories: doc.data().calories,
   }
 }
 

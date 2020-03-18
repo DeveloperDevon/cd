@@ -5,6 +5,7 @@
       outlined
       v-model="searchInput"
       append-outer-icon="mdi-arrow-right-bold"
+      label="Recipe Search"
       @click:append-outer="searchRecipes(searchInput)"
       />
     </v-form>

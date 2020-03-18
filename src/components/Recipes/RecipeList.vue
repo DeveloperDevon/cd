@@ -5,14 +5,14 @@
       <thead>
         <tr class="table-header">
           <th class="text-left">Recipe</th>
-          <th class="text-left">Time to Cook</th>
+          <th class="text-left">Time</th>
           <th class="text-center">Ingredients</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="recipe in recipes" :key="recipe.id" @click="viewDetails(recipe)">
           <td>{{ recipe.name }}</td>
-          <td>{{ recipe.cookTime }}</td>
+          <td>{{ recipe.cookTime }} mins</td>
           <td class="text-center">{{ recipe.ingredients.length }}</td>
         </tr>
       </tbody>

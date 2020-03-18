@@ -14,7 +14,7 @@
       </v-col>
     </v-row>
 
-    <v-row>
+    <v-row class=mt-7>
       <v-col cols="4">
         <router-link style="text-decoration: none" to="/calendar">
           <v-icon color="primary" style="font-size: 9rem">mdi-calendar-month</v-icon>

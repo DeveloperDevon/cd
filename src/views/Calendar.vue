@@ -86,7 +86,7 @@
         </v-card>
       </v-dialog>
 
-<v-sheet height="600">
+<v-sheet style="height:100%; padding-bottom: 56px;">
   <v-calendar
   ref="calendar"
   v-model="focus"

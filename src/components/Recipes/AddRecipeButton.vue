@@ -97,9 +97,10 @@ export default {
   methods: {
     ...mapActions(["addRecipe"]),
     addItem() {
+      const flattened = this.ingredients.map(a => `${a.amount} ${a.ingredient}`)
       const newRecipe = {
         name: this.recipeName,
-        ingredients: this.ingredients,
+        ingredients: flattened,
         directions: this.directions,
         cookTime: this.cookTime
       };

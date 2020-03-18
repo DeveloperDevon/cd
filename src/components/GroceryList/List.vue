@@ -1,27 +1,18 @@
 <template>
   <v-container class="grocery-list text-left">
-    <v-row>
+    <v-row class="mb-7">
       <v-col>
-        <v-row class="px-3">
-          <!-- <router-link style="text-decoration: none" to="/groceries">
-            <h3 class="pl-4 mb-3 text-white">Grocery List</h3>
-          </router-link>
-          <v-spacer></v-spacer>
-          <h3 v-if="groceries" style="color: #FFFFFF" class="pr-4">
-            {{groceries.filter(a => a.checked === true).length}}/{{groceries.length}}
-          </h3> -->
-        </v-row>
-        <v-simple-table v-if="this.currentRoute === 'groceries'" fixed-header height="480">
+        <v-simple-table v-if="this.currentRoute === 'groceries'" fixed-header style="margin-bottom: 20px">
           <thead>
             <tr class="table-header">
-              <th class="text-left">Qty</th>
-              <th class="text-left">Item</th>
+              <!-- <th class="text-left">Qty</th> -->
+              <th class="text-left">{{groceries.filter(a => a.checked === true).length}}/{{groceries.length}} Items</th>
               <th class="text-right"><ListMenu /></th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="grocery in groceries" :key="grocery.id">
-              <td>{{ grocery.qty }}</td>
+              <!-- <td>{{ grocery.qty }}</td> -->
               <td @click="toggleChecked(grocery)" v-bind:class="{ checked: grocery.checked }">{{ grocery.item_name }}</td>
               <td class="text-right">
                 <EditGroceryButton style="display: inline; padding-right: 7px !important;" :grocery="grocery"/>
@@ -31,8 +22,8 @@
           </tbody>
         </v-simple-table>
       </v-col>
+      <AddGroceryButton />
     </v-row>
-    <AddGroceryButton />
   </v-container>
 </template>
 
