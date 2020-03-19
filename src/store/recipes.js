@@ -2,6 +2,9 @@ import { db } from '../db'
 import { transformRecipes } from '../helpers'
 import axios from 'axios'
 import { EDAMAM_APP_ID, EDAMAM_APP_KEY } from '../constants'
+import * as firebase from 'firebase'
+const timestamp = firebase.firestore.FieldValue.serverTimestamp() // Move to helpers
+
 
 const state = {
   recipes: [],
@@ -20,12 +23,13 @@ const getters = {
 const actions = {
   async fetchRecipes({ commit }) {
     const recipes = await db.collection('recipes')
+    .orderBy('timestamp', 'desc')
     .get()
     .then((queryData) => queryData.docs.map((doc) => transformRecipes(doc)))
     commit('setRecipes', recipes)
   },
   async addRecipe({ commit }, recipe) {
-    await db.collection('recipes').add(recipe).then((a) => commit('newRecipe', { id: a.id,  ...recipe }))
+    await db.collection('recipes').add(recipe).then((a) => commit('newRecipe', { id: a.id, timestamp, ...recipe }))
   },
   async selectRecipe({ commit }, id) {
     const recipe = state.recipes.find(a => a.id === id)
@@ -43,11 +47,12 @@ const actions = {
     ).then(a => commit('setSearchResults', a.data.hits))
   },
   async saveRecipe({ commit }, recipe) {
-    console.log('from store', recipe)
-    // commit('saveRecipe', recipe)
-    await db.collection('recipes').add(recipe).then(doc => {
-      commit('saveRecipe', { id: doc.id, ...recipe})
+    await db.collection('recipes').add({ timestamp, ...recipe}).then(doc => {
+      commit('saveRecipe', { id: doc.id, timestamp, ...recipe})
     })
+  },
+  async removeRecipe({ commit }, id) {
+    await db.collection('recipes').doc(id).delete().then(commit('deleteRecipe', id))
   },
   selectSearchResult({ commit }, searchResult) {
     commit('setSearchResultDetails', searchResult)
@@ -60,7 +65,8 @@ const mutations = {
   selectRecipe: (state, recipe) => state.selectedRecipe = recipe,
   setSearchResults: (state, searchResults) => state.searchResults = searchResults,
   saveRecipe: (state, recipe) => state.recipes.push(recipe),
-  setSearchResultDetails: (state, searchResult) => state.searchResultDetails = searchResult
+  setSearchResultDetails: (state, searchResult) => state.searchResultDetails = searchResult,
+  deleteRecipe: (state, id) =>  state.recipes = state.recipes.filter(recipe => recipe.id !== id)
 }
 
 export default { state, getters, actions, mutations }

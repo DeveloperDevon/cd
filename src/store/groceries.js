@@ -2,6 +2,8 @@ import { db } from '../db'
 import { transformGroceries } from '../helpers'
 import * as firebase from 'firebase'
 
+const timestamp = firebase.firestore.FieldValue.serverTimestamp()
+
 const state = {
   groceries: []
 }
@@ -13,14 +15,22 @@ const getters = {
 const actions = {
   async fetchGroceries({ commit }) {
     const data = await db.collection('groceries')
-    .orderBy('checked', 'asc')
+    .orderBy('timestamp', 'desc')
     .get()
     .then((queryData) => queryData.docs.map((doc) => transformGroceries(doc)))
     commit('setGroceries', data)
   },
   async addGrocery({ commit }, grocery) {
-    const  timestamp = firebase.firestore.FieldValue.serverTimestamp()
+    console.log({timestamp, grocery})
     await db.collection('groceries').add({timestamp, ...grocery}).then((a) => commit('newGrocery', { id: a.id,  ...grocery }))
+  },
+  async addIngredients({ commit }, ingredients) {
+    await ingredients.forEach(ingredient => {
+      const record = { timestamp, item_name: ingredient, checked: false }
+      db.collection('groceries').add(record)
+      .then(doc => commit('setIngredientsToList', {id: doc.id, ...record}))
+      })
+    
   },
   async removeGrocery({ commit }, id) {
     await db.collection('groceries').doc(id).delete().then(commit('deleteGrocery', id))
@@ -33,7 +43,7 @@ const actions = {
       }).then(() => commit('deleteChecked')) 
   },
   async modifyGrocery({ commit }, grocery) {
-    await db.collection('groceries').doc(grocery.id).set(grocery).then(commit('modifyGrocery', grocery))
+    await db.collection('groceries').doc(grocery.id).set({ timestamp, ...grocery}).then(commit('modifyGrocery', grocery))
   },
   async toggleChecked({commit}, grocery) {
     await db.collection('groceries').doc(grocery.id)
@@ -41,8 +51,9 @@ const actions = {
     .then(commit('updateChecked', grocery))
   },
   async sortBy({ commit }, sortByField) {
+    const dir = sortByField === 'timestamp' ? 'desc' : 'asc'
     const data = await db.collection('groceries')
-    .orderBy(sortByField)
+    .orderBy(sortByField, dir)
     .get()
     .then((queryData) => queryData.docs.map((doc) => transformGroceries(doc)))
     commit('sortGroceries', data)
@@ -51,7 +62,8 @@ const actions = {
 
 const mutations = {
   setGroceries: (state, groceries) => state.groceries = groceries,
-  newGrocery: (state, grocery) => state.groceries.push(grocery),
+  setIngredientsToList: (state, ingredient) => state.groceries.unshift(ingredient),
+  newGrocery: (state, grocery) => state.groceries.unshift(grocery),
   deleteGrocery: (state, id) =>  state.groceries = state.groceries.filter(grocery => grocery.id !== id),
   deleteChecked: (state) => state.groceries = state.groceries.filter(grocery => grocery.checked !== true),
   modifyGrocery: (state, grocery) => {
@@ -60,9 +72,6 @@ const mutations = {
   },
   updateChecked: (state, grocery) => {
     state.groceries.find(a => a.id === grocery.id).checked = !grocery.checked
-    if(grocery.checked) state.groceries.push(state.groceries.splice(state.groceries.indexOf(grocery), 1)[0])
-    if(!grocery.checked) state.groceries.unshift(state.groceries.splice(state.groceries.indexOf(grocery), 1)[0])
-    state.groceries = state.groceries.sort()
   },
   sortGroceries: (state, groceries) => state.groceries = groceries
 }

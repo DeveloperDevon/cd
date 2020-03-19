@@ -1,14 +1,14 @@
 <template>
   <v-app-bar app color="primary" dark>
         <NavDrawer />
-        <v-img @click.stop="drawerVisible = !drawerVisible" alt="Vuetify Logo" class="shrink mr-2" contain src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png" transition="scale-transition" width="40" />
+        <v-icon @click.stop="drawerVisible = !drawerVisible" x-large>mdi-dog </v-icon>
       <v-img alt="Vuetify Name" class="shrink mt-1 hidden-sm-and-down" contain min-width="100" src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png" width="100" />
     <v-spacer></v-spacer>
     <v-btn text v-if="!loggedIn">
       <Login />
     </v-btn>
     <v-btn style="padding-right: 0px !important;" text @click="signOut()" v-if="loggedIn">
-      <v-icon>mdi-logout-variant</v-icon>
+      <v-icon large>mdi-logout-variant</v-icon>
     </v-btn>
   </v-app-bar>
 </template>

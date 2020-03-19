@@ -2,9 +2,7 @@ export const transformGroceries = (doc) => {
   return {
     id: doc.id,
     item_name: doc.data().item_name,
-    category: doc.data().category,
     checked: doc.data().checked,
-    qty: doc.data().qty
   }
 }
 

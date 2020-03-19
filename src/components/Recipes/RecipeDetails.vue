@@ -1,5 +1,6 @@
 <template>
   <div v-if="selectedRecipe">
+    <DetailsMenuButton />
     <v-img v-if="selectedRecipe.image" :src="selectedRecipe.image" height="220"></v-img>
     <h2 class="text-center mt-2">{{ selectedRecipe.name }}</h2>
     <h3 class="text-center">
@@ -20,20 +21,25 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex"
+import DetailsMenuButton from './DetailsMenuButton'
+
+
 export default {
-  methods: mapActions(["selectRecipe"]),
+  components: { DetailsMenuButton },
   computed: mapGetters(["selectedRecipe"]),
   created() {
     this.ingredients = this.selectedRecipe.ingredients;
   },
   mounted() {
-    this.selectRecipe(this.$route.params.id);
-    console.log(this.$route.params.id);
+    this.selectRecipe(this.$route.params.id)
   },
   data: () => ({
     ingredients: []
-  })
+  }),
+  methods: {
+    ...mapActions(["selectRecipe"]),
+  }
 };
 </script>
 

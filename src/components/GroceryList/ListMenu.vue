@@ -22,7 +22,6 @@
         data: () => ({
         menuItems: [
             { title: 'Sort by added date', sortBy: 'timestamp', asc: true},
-            { title: 'Sort by checked', sortBy: 'checked', asc: true},
             { title: 'Sort alphabetical', sortBy: 'item_name', asc: true},
         ],
         }),

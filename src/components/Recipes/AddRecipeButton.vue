@@ -112,7 +112,7 @@ export default {
     },
     searchRecipes() {
       this.$router.push({ name: 'searchRecipes'})
-    }
+    },
   }
 };
 </script>
