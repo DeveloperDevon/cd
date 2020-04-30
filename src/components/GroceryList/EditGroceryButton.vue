@@ -20,8 +20,15 @@
                     </v-row>
                   </v-card-text>
                   <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn color="primary" type="submit">Edit</v-btn>
+                      <v-row>
+                        <v-col></v-col>
+                        <v-col>
+                          <v-card-actions>
+                            <v-btn raised x-large color="primary" type="submit">Update</v-btn>
+                          </v-card-actions>
+                        </v-col>
+                        <v-col></v-col>
+                      </v-row>
                   </v-card-actions>
                 </v-card>
             </v-form>

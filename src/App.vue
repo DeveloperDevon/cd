@@ -27,6 +27,7 @@ export default {
     this.fetchGroceries()
     this.fetchEvents()
     this.fetchRecipes()
+    this.fetchPhotos()
     if (auth.currentUser) {
       this.$store.commit('setAuthenticated', true)
       this.$store.commit('setUser', auth.currentUser.email)
@@ -35,7 +36,7 @@ export default {
     // .then(a => console.log(a))
   },
   methods: {
-    ...mapActions(['fetchGroceries', 'fetchEvents', 'fetchRecipes'])
+    ...mapActions(['fetchGroceries', 'fetchEvents', 'fetchRecipes', 'fetchPhotos'])
   }
 };
 </script>

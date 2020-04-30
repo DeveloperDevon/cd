@@ -48,6 +48,7 @@
             {route: 'groceries', icon: 'mdi-cart', title: 'Groceries'},
             {route: 'calendar', icon: 'mdi-calendar', title: 'Calendar'},
             {route: 'recipesList', icon: 'mdi-pasta', title: 'Recipes'},
+            {route: 'gallery', icon: 'mdi-camera-enhance', title: 'Gallery' }
           ]
         }),
     }

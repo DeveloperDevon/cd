@@ -6,6 +6,7 @@ import auth from './auth'
 import groceries from './groceries'
 import calendar from './calendar'
 import recipes from './recipes'
+import gallery from './gallery'
 
 Vue.use(Vuex)
 
@@ -15,6 +16,7 @@ export default new Vuex.Store({
     auth,
     groceries,
     calendar,
-    recipes
+    recipes,
+    gallery
   }
 })

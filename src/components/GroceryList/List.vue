@@ -12,16 +12,16 @@
           <tbody>
             <tr v-for="grocery in groceries.filter(a => a.checked === false)" :key="grocery.id">
               <td @click="toggleChecked(grocery)" style="width: 80%" v-bind:class="{ checked: grocery.checked }">{{ grocery.item_name }}</td>
-              <td class="text-right" style="width: 20%">
+              <td class="text-right btn-row">
                 <EditGroceryButton style="display: inline; padding-right: 7px !important;" :grocery="grocery"/>
-                <v-icon @click="removeGrocery(grocery.id)" dense color="red">mdi-delete</v-icon>
+                <DeleteGroceryButton :grocery="grocery"/>
               </td>
             </tr>
             <tr v-for="grocery in groceries.filter(a => a.checked === true)" :key="grocery.id">
-              <td @click="toggleChecked(grocery)" v-bind:class="{ checked: grocery.checked }">{{ grocery.item_name }}</td>
-              <td class="text-right">
-                <EditGroceryButton style="display: inline; padding-right: 7px !important;" :grocery="grocery"/>
-                <v-icon @click="removeGrocery(grocery.id)" dense color="red">mdi-delete</v-icon>
+              <td @click="toggleChecked(grocery)" style="width: 80%" v-bind:class="{ checked: grocery.checked }">{{ grocery.item_name }}</td>
+              <td class="text-right btn-row">
+                <EditGroceryButton style="padding-right: 7px !important;" :grocery="grocery"/>
+                <DeleteGroceryButton :grocery="grocery"/>
               </td>
             </tr>
           </tbody>
@@ -34,6 +34,7 @@
 
 <script>
 import EditGroceryButton from './EditGroceryButton'
+import DeleteGroceryButton from './DeleteGroceryButton'
 import AddGroceryButton from '@/components/GroceryList/AddGroceryButton'
 import ListMenu from '@/components/GroceryList/ListMenu'
 
@@ -41,7 +42,7 @@ import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'List',
-  components: { EditGroceryButton, AddGroceryButton, ListMenu },
+  components: { EditGroceryButton, AddGroceryButton, DeleteGroceryButton, ListMenu },
   data: () => ({
     currentRoute: ''
   }),
@@ -77,5 +78,10 @@ export default {
   .checked {
     color: #FF5722;
     text-decoration: line-through;
+  }
+  .btn-row {
+    display: flex;
+    flex-direction: row;
+    padding: 12px !important;
   }
 </style>

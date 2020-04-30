@@ -6,6 +6,16 @@ export const transformGroceries = (doc) => {
   }
 }
 
+export const transformPhotos = (doc) => {
+  return {
+    id: doc.id,
+    item_name: doc.data().name,
+    downloadURL: doc.data().downloadURL,
+    timestamp: doc.data().timestamp,
+    rotateClass: doc.data().rotateClass
+  }
+}
+
 export const transformEvents = (doc) => {
   return {
     id: doc.id,

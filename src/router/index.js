@@ -26,6 +26,12 @@ const routes = [
     meta: {requiresAuth: true}
   },
   {
+    path: '/gallery',
+    name: 'gallery',
+    component: () => import(/* webpackChunkName: "about" */ '../views/Gallery.vue'),
+    meta: {requiresAuth: true}
+  },
+  {
     path: '/recipes/',
     name: 'recipes',
     component: () => import('../views/Recipes.vue'),
